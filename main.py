@@ -1,27 +1,28 @@
 import requests as rq
 from collections import namedtuple
 
-#  URL
-base_url = 'https://api.themotivate365.com/stoic-quote'
+# URL
+base_url = 'http://epicuserpython.pythonanywhere.com/api'
 
-#  Data Model
-Quote = namedtuple('Quote', 'data author quote')
+Response = namedtuple('Response', 'accuracy input response')
 
 
-def get_quote() -> Quote:
-    # payload = {'query': 'value'}
-    request = rq.get(base_url)  # params=payload
+def get_response(user_input) -> Response:
+    payload = {'input': user_input}
+    request = rq.get(base_url, params=payload)
     json = request.json()
 
-    data = json['data']
-    author = data['author']
-    quote = data['quote']
+    print(json)
 
-    return Quote(data, author, quote)
+    accuracy = json['accuracy']
+    input = json['input']
+    response = json['response']
+
+    return Response(accuracy, input, response)
 
 
-# Make the request
-result: Quote = get_quote()
+response: Response = get_response(input('Type something: '))
 
-print('Author:', result.author)
-print('Quote:', result.quote)
+print('Accuracy:', response.accuracy)
+print('Input:', response.input)
+print('Response:', response.response)
